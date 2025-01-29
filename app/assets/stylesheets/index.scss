@@ -1,0 +1,247 @@
+.orders-table th,
+.orders-table td {
+  font-size: 0.875rem;
+}
+
+.badge-recebido, .badge-ativo {
+  background-color: #CAFBF1;
+  color: #0eb374;
+  border: 1px solid #a3f3a0;
+}
+
+.badge-pendente, .badge-inativo {
+  background-color: #f8d7da;
+  color: #C03E73;
+  border: 1px solid #f3a0da;
+}
+
+.badge-espera {
+  background-color: #d7d8f8;
+  color: #473ec0;
+  border: 1px solid #b2a0f3;
+}
+
+.badge-defaut {
+  background-color: #FCE5EA;
+  color: #BA893B;
+  border: 1px solid #f3d3a0; 
+}
+
+.btn-outline-info .bi-pencil,
+.btn-outline-danger .bi-trash {
+  font-size: 1rem;
+}
+
+.orders-table .text-center {
+  text-align: center;
+}
+
+.btn-outline-info,
+.btn-outline-danger {
+  border: none; 
+  box-shadow: none; 
+}
+
+.btn-outline-info {
+  color:#0A2337; 
+}
+
+.btn-group .btn {
+  margin-right: 5px; 
+}
+.btn-adicionar-pedido {
+    background-color: #F85800; 
+    color: #ffffff; 
+    border: none; 
+    box-shadow: none; 
+  }
+  .btn-outline-info:hover {
+    color:  #F85800; 
+    border: none; 
+    box-shadow: none;
+    text-decoration: none;
+    background-color: #ffffff;
+  
+  }
+  
+  .btn-adicionar-pedido {
+    background-color:#F85800;
+    color: #ffffff; 
+    border: none; 
+    box-shadow: none;
+  }
+  
+  .btn-adicionar-pedido:hover {
+    background-color: #FC8D00; 
+    color: #ffffff;
+    border: none; 
+    box-shadow: none; 
+  }
+  
+.btn-green {
+  background-color: #173F3F; 
+  color: #ffffff; 
+  border: none; 
+}
+
+.pag .page-item.active .page-link {
+  background-color: #F85800; 
+  border-color: #F85800; 
+}
+
+.pag .page-item .page-link {
+  color:#0A2337;
+  border-color: #F85800; 
+}
+
+.pag .page-item .page-link:hover {
+  background-color: #F85800; 
+  color: #ffffff; 
+  border-color: #F85800; 
+}
+.titulo {
+  color: #0A2337;
+  font-family: 'Monteserrat', sans-serif; /* Fonte mais moderna e limpa */
+  font-weight: 600; /* Peso médio para um visual elegante */
+  letter-spacing: 0.5px; /* Leve espaçamento entre as letras */
+  text-align: center; /* Centralizar o título */
+}
+
+
+
+.info-secao {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-titulo {
+  color: #0A2337;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.info-conteudo {
+  color: #333;
+  font-size: 1rem;
+}
+
+.container-fluid {
+  max-width: 800px;
+  margin: auto;
+}
+
+.main-content {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+h2 {
+  color: #F85800;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+/* Estilo para o título principal */
+
+
+/* Cartões com sombra mais suave e borda sutil */
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(241, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+
+
+/* Títulos das seções de informação */
+.info-titulo {
+  color: #0A2337 ;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #F85800;
+  padding-left: 10px;
+}
+
+/* Conteúdo das seções */
+.info-conteudo {
+  font-size: 1rem;
+  color: #4F4F4F;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f0f0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  color: #0A2337;
+  font-weight: 600;
+  border-bottom: 2px solid #F85800;
+  padding-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  .titulo {
+    font-size: 1.5rem;
+  }
+
+  .info-titulo {
+    font-size: 1rem;
+  }
+
+  .info-conteudo {
+    font-size: 0.9rem;
+  }
+
+  .card h3 {
+    font-size: 1.25rem;
+  }
+}
+
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+body {
+  background-color: #F5F5F5;
+  font-family: 'Roboto', sans-serif;
+}
+
+h2, h4, p {
+  margin: 0;
+}
+.icon-bordered {
+  border: 5px solid orange; 
+  border-radius: 5px; 
+  padding: 5px; 
+}
+.opcao {
+  color: #0A2337; 
+  border: none; 
+  box-shadow: none;
+  text-decoration: none;
+}
+.opcao:hover {
+  color:  #F85800; 
+  border: none; 
+  box-shadow: none;
+  text-decoration: none;
+}
