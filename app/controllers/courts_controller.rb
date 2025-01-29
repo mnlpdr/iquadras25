@@ -1,4 +1,5 @@
 class CourtsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_court, only: %i[ show edit update destroy ]
 
   # GET /courts or /courts.json
