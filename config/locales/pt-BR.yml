@@ -1,0 +1,20 @@
+pt-BR:
+  hello: "Olá, mundo!"
+  activerecord:
+    models:
+      court: "Quadra"
+    attributes:
+      court:
+        name: "Nome"
+        location: "Localização"
+        capacity: "Capacidade"
+  helpers:
+    submit:
+      create: "Criar %{model}"
+      update: "Atualizar %{model}"
+    action:
+      destroy: "Excluir %{model}"
+  notices:
+    create_success: "%{model} foi criado(a) com sucesso."
+    update_success: "%{model} foi atualizado(a) com sucesso."
+    destroy_success: "%{model} foi excluído(a) com sucesso."

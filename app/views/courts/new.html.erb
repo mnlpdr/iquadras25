@@ -1,0 +1,11 @@
+<% content_for :title, "New court" %>
+
+<h1>New court</h1>
+
+<%= render "form", court: @court %>
+
+<br>
+
+<div>
+  <%= link_to "Back to courts", courts_path %>
+</div>

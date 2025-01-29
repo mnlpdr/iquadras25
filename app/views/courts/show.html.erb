@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @court %>
+
+<div>
+  <%= link_to "Edit this court", edit_court_path(@court) %> |
+  <%= link_to "Back to courts", courts_path %>
+
+  <%= button_to "Destroy this court", @court, method: :delete %>
+</div>
