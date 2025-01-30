@@ -1,16 +1,28 @@
-<p style="color: green"><%= notice %></p>
+<div class="container">
+  <h1 class="text-center my-4">Quadras</h1>
 
-<% content_for :title, "Courts" %>
-
-<h1>Courts</h1>
-
-<div id="courts">
-  <% @courts.each do |court| %>
-    <%= render court %>
-    <p>
-      <%= link_to "Show this court", court %>
-    </p>
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
   <% end %>
-</div>
 
-<%= link_to "New court", new_court_path %>
+  <div class="row">
+    <% @courts.each do |court| %>
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"><%= court.name %></h5>
+            <p class="card-text"><%= court.location %></p>
+            <p class="card-text">Capacidade: <%= court.capacity %></p>
+            <a href="<%= court_path(court) %>" class="btn btn-info btn-sm">
+              <i class="bi bi-eye"></i> Ver
+            </a>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <a href="<%= new_court_path %>" class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> Nova Quadra
+  </a>
+</div>
