@@ -1,0 +1,13 @@
+<h1>Reservas</h1>
+
+<%= link_to "Nova Reserva", new_reservation_path %>
+
+<ul>
+  <% @reservations.each do |reservation| %>
+    <li>
+      <strong><%= reservation.court.name %></strong> - 
+      <%= l(reservation.date, format: :long) %>
+      <%= button_to "Excluir", reservation_path(reservation), method: :delete, data: { confirm: "Tem certeza?" } %>
+    </li>
+  <% end %>
+</ul>

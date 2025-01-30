@@ -1,0 +1,17 @@
+<h1>Nova Reserva</h1>
+
+<%= form_with model: @reservation, local: true do |f| %>
+  <div>
+    <%= f.label :court_id, "Quadra" %>
+    <%= f.collection_select :court_id, Court.all, :id, :name %>
+  </div>
+
+  <div>
+    <%= f.label :date, "Data da Reserva" %>
+    <%= f.date_select :date %>
+  </div>
+
+  <div>
+    <%= f.submit "Criar Reserva" %>
+  </div>
+<% end %>
