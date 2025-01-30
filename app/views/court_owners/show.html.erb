@@ -1,0 +1,16 @@
+<div class="container">
+  <h1 class="text-center my-4">Detalhes do Dono de Quadra</h1>
+
+  <div class="card p-4 shadow">
+    <h5 class="card-title"><%= @court_owner.name %></h5>
+    <p class="card-text"><strong>Email:</strong> <%= @court_owner.email %></p>
+    <p class="card-text"><strong>Telefone:</strong> <%= @court_owner.phone_number.present? ? @court_owner.phone_number : "Não informado" %></p>
+    <p class="card-text"><strong>Endereço:</strong> <%= @court_owner.address.present? ? @court_owner.address : "Não informado" %></p>
+
+    <div class="d-flex justify-content-between mt-3">
+      <%= link_to "Voltar", court_owners_path, class: "btn btn-secondary" %>
+      <%= link_to "Editar", edit_court_owner_path(@court_owner), class: "btn btn-warning" %>
+      <%= link_to "Excluir", @court_owner, method: :delete, class: "btn btn-danger", data: { confirm: "Tem certeza que deseja excluir este dono?" } %>
+    </div>
+  </div>
+</div>

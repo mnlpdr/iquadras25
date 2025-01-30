@@ -17,15 +17,25 @@
 <body class="bg-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="/">iQuadras</a>
+      <a class="navbar-brand" href="<%= root_path %>">iQuadras</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="<%= root_path %>">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="<%= reservations_path %>">Reservas</a></li>
           <li class="nav-item"><a class="nav-link" href="<%= courts_path %>">Quadras</a></li>
-          <li class="nav-item"><a class="nav-link btn btn-danger text-white" href="<%= destroy_user_session_path %>" data-method="delete">Sair</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%= clients_path %>">Clientes</a></li>
+          <li class="nav-item"><a class="nav-link" href="<%= court_owners_path %>">Donos de Quadras</a></li>
+
+          <% if user_signed_in? %>
+            <li class="nav-item">
+              <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-danger text-white nav-link", form: { class: "d-inline-block" } %>
+            </li>
+          <% else %>
+            <li class="nav-item"><a class="nav-link btn btn-primary text-white" href="<%= new_user_session_path %>">Entrar</a></li>
+          <% end %>
         </ul>
       </div>
     </div>
