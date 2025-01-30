@@ -1,0 +1,109 @@
+/* Estilos da Sidebar */
+.sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  width: 250px;
+  background-color: #f8f9fa; /* Cor de fundo suave */
+  padding-top: 20px;
+}
+
+.sidebar-logo {
+  width: 50px;
+  height: 50px; /* Tornar a altura igual à largura */
+  border-radius: 50%; /* Faz a imagem ficar redonda */
+  object-fit: cover; /* Garante que a imagem preencha o espaço e corte, se necessário, sem distorção */
+}
+
+.sidebar-header {
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #0A2337;
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #8d8d8d; 
+  transition: background-color 0.3s;
+}
+
+.sidebar .nav-link i {
+  font-size: 1.2rem; /* Tamanho do ícone */
+}
+
+.sidebar .nav-link:hover {
+  background-color: #e9e9e9; /* Cor de fundo ao passar o mouse */
+  border-radius: 5px;
+  color: #F85800;
+  font-weight: 500;
+}
+
+.sidebar .nav-link.active {
+  background-color: #e7e7e7; /* Cor de fundo para o item ativo */
+  color: white; /* Cor do texto para o item ativo */
+}
+
+.sidebar .nav-link.active i {
+  color: white; /* Cor do ícone para o item ativo */
+}
+
+/* Estilos gerais */
+.flex-grow-1 {
+  margin-left: 250px; /* Espaço reservado para a sidebar */
+}
+
+.main-content {
+  margin-left: 250px; /* Espaço reservado para a sidebar */
+  padding: 1rem; /* Espaço interno para o conteúdo */
+}
+
+.flex-grow-1.p-4 {
+  background-color: #f8f9fa; /* Cor de fundo suave para o conteúdo principal */
+  border-radius: 0.5rem; /* Bordas arredondadas */
+}
+
+.d-flex.justify-content-between {
+  padding-bottom: 1rem; /* Espaçamento inferior para separar elementos */
+  border-bottom: 1px solid #dee2e6; /* Linha sutil de separação */
+}
+
+.me-3 {
+  margin-right: 15px; /* Espaçamento à direita */
+  text-align: right; /* Alinhamento à direita para um layout mais refinado */
+}
+
+.me-3 p {
+  margin: 0; /* Remove margem padrão do parágrafo */
+  font-size: 1rem; /* Tamanho da fonte */
+  font-weight: bold; /* Texto em negrito */
+  color: #333; /* Cor do texto */
+}
+
+.me-3 .badge {
+  font-size: 0.60rem; /* Tamanho da fonte da badge */
+  padding: 0.25rem 0.5rem; /* Espaçamento interno da badge */
+  border-radius: 0.5rem; /* Arredondamento da badge */
+  background-color: #173F3F !important;
+}
+
+img.profile {
+  width: 40px; /* Largura da imagem */
+  height: 40px; /* Altura da imagem */
+  border-radius: 50%; /* Torna a imagem redonda */
+}
+
+.d-flex.align-items-center {
+  gap: 1rem; /* Espaçamento entre a imagem e o texto */
+}
+
+h2 {
+  font-size: 1.5rem; /* Tamanho da fonte do título */
+  color: #0A2337; /* Cor do título */
+  font-weight: bold; /* Negrito para o título */
+  margin: 0; /* Remove margem do título */
+}

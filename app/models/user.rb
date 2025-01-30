@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  # Relacionamento com reservas
   has_many :reservations, dependent: :destroy
 
   # Garantir que nome e e-mail sejam preenchidos e únicos
