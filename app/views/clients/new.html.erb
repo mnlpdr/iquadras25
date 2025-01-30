@@ -1,0 +1,10 @@
+<div class="container mt-4">
+  <h1 class="text-center">Novo Cliente</h1>
+
+  <div class="card p-4 shadow">
+    <%= render "form", client: @client %>
+    <div class="mt-3">
+      <%= link_to "Voltar", clients_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

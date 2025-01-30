@@ -1,2 +1,70 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div class="container mt-5">
+  <h1 class="text-center">Bem-vindo ao iQuadras!</h1>
+  <p class="text-center lead">Gerencie suas reservas e quadras com facilidade.</p>
+
+  <% if user_signed_in? %>
+    <div class="alert alert-success text-center">
+      <h4>Olá, <%= current_user.email %>!</h4>
+      <p>Você está logado. Acesse rapidamente as seções abaixo:</p>
+    </div>
+
+    <div class="container">
+    <div class="row mt-4">
+      <div class="col-md-6 d-flex">
+        <div class="card text-center shadow flex-fill d-flex flex-column">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title">Reservas</h5>
+              <p class="card-text mb-4">Gerencie suas reservas facilmente.</p>
+            </div>
+            <a href="<%= reservations_path %>" class="btn btn-primary mt-auto">Ver Reservas</a>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-6 d-flex">
+        <div class="card text-center shadow flex-fill d-flex flex-column">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title">Quadras</h5>
+              <p class="card-text mb-4">Visualize e gerencie quadras disponíveis.</p>
+            </div>
+            <a href="<%= courts_path %>" class="btn btn-primary mt-auto">Ver Quadras</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row mt-4">
+      <div class="col-md-6 d-flex">
+        <div class="card text-center shadow flex-fill d-flex flex-column">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title">Clientes</h5>
+              <p class="card-text mb-4">Gerencie os clientes cadastrados no sistema.</p>
+            </div>
+            <a href="<%= clients_path %>" class="btn btn-primary mt-auto">Ver Clientes</a>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-6 d-flex">
+        <div class="card text-center shadow flex-fill d-flex flex-column">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title">Donos de Quadras</h5>
+              <p class="card-text mb-4">Gerencie os donos de quadras cadastrados.</p>
+            </div>
+            <a href="<%= court_owners_path %>" class="btn btn-primary mt-auto">Ver Donos de Quadras</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <% else %>
+    <div class="text-center mt-4">
+      <a href="<%= new_user_session_path %>" class="btn btn-success btn-lg">Faça Login</a>
+    </div>
+  <% end %>
+</div>
