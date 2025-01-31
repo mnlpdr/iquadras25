@@ -8,8 +8,12 @@
   <ul class="list-group">
     <% @reservations.each do |reservation| %>
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <strong><%= reservation.court.name %></strong> - 
-        <%= l(reservation.date, format: :long) %>
+        <div>
+          <strong><%= reservation.court.name %></strong> - 
+          <%= l(reservation.date, format: :long) %>
+          <br>
+          <small class="text-muted">Reservado por: <%= reservation.user.name %></small>
+        </div>
         <%= button_to "Excluir", reservation_path(reservation), method: :delete, class: "btn btn-danger btn-sm", data: { confirm: "Tem certeza?" } %>
       </li>
     <% end %>

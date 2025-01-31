@@ -32,7 +32,7 @@
   
     <div class="mb-3">
       <%= f.label :birthdate, "Data de nascimento", class: "form-label" %>
-      <%= f.date_select :birthdate, {}, { class: "form-control" } %>
+      <%= f.date_select :birthdate, start_year: 1900, end_year: Date.today.year, class: "form-control" %>
     </div>
   
     <div class="d-flex justify-content-between">
