@@ -69,3 +69,7 @@ gem "bootstrap", "~> 5.3"
 gem "sassc-rails", "~> 2.1"
 
 gem "cssbundling-rails", "~> 1.4"
+
+gem 'dotenv-rails', groups: [:development, :test]
+
+gem 'puma_worker_killer'
