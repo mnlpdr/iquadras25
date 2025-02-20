@@ -36,4 +36,7 @@ Rails.application.routes.draw do
   # Rotas para Proprietários de Quadras
   resources :court_owners
 
+  # rotas pra login e logout
+  resource :sessions, only: [:new, :create, :destroy]
+
 end
