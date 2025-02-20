@@ -26,6 +26,13 @@
     <%= form.number_field :capacity %>
   </div>
 
+  <%= form.label :sports %><br>
+  <% Sport.all.each do |sport| %>
+    <%= check_box_tag "court[sport_ids][]", sport.id, @court.sports.include?(sport) %>
+    <%= label_tag "court_sport_#{sport.id}", sport.name %><br>
+  <% end %>
+
+
   <div>
     <%= form.submit %>
   </div>

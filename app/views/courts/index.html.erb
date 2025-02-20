@@ -1,8 +1,24 @@
 <div class="container">
   <h1 class="text-center my-4">Quadras</h1>
 
+  <%= form_with(url: courts_path, method: :get, class: "mb-4") do %>
+    <div class="form-group">
+      <%= label_tag :sport, "Filtrar por esporte" %>
+      <% if @sports.present? %>
+        <%= select_tag :sport, options_from_collection_for_select(@sports, :id, :name), prompt: "Selecione um esporte", class: "form-control" %>
+      <% else %>
+        <p class="text-warning">Nenhum esporte cadastrado.</p>
+      <% end %>
+    </div>
+    <%= submit_tag "Filtrar", class: "btn btn-primary" %>
+  <% end %>
+
   <% if notice %>
     <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+
+  <% if params[:sport].present? %>
+    <h2 class="text-center my-4">Quadras para o esporte: <%= Sport.find(params[:sport]).name %></h2>
   <% end %>
 
   <div class="row">
@@ -13,6 +29,18 @@
             <h5 class="card-title"><%= court.name %></h5>
             <p class="card-text"><%= court.location %></p>
             <p class="card-text">Capacidade: <%= court.capacity %></p>
+
+            <% if court.sports.any? %>
+              <p class="card-text"><strong>Esportes:</strong></p>
+              <ul>
+                <% court.sports.each do |sport| %>
+                  <li><%= sport.name %></li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="card-text"><em>Sem esportes cadastrados</em></p>
+            <% end %>
+
             <a href="<%= court_path(court) %>" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i> Ver
             </a>

@@ -1,10 +1,15 @@
 class CourtsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_court, only: %i[ show edit update destroy ]
+  before_action :set_sports, only: [:index]
 
   # GET /courts or /courts.json
   def index
-    @courts = Court.all
+    if params[:sport].present?
+      @courts = Court.joins(:sports).where(sports: { id: params[:sport] })
+    else
+      @courts = Court.all
+    end
   end
 
   # GET /courts/1 or /courts/1.json
@@ -66,6 +71,10 @@ class CourtsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def court_params
-      params.expect(court: [ :name, :location, :capacity ])
+      params.require(:court).permit(:name, :location, :capacity, sport_ids: [])
+    end
+
+    def set_sports
+      @sports = Sport.all
     end
 end
