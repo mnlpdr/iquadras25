@@ -5,6 +5,12 @@
     <div class="alert alert-success"><%= notice %></div>
   <% end %>
 
+  <% if current_user.admin? || current_user.court_owner? %>
+    <a href="<%= new_court_path %>" class="btn btn-primary mb-3">
+      <i class="bi bi-plus-circle"></i> Nova Quadra
+    </a>
+  <% end %>
+
   <div class="row">
     <% @courts.each do |court| %>
       <div class="col-md-4">
@@ -13,16 +19,27 @@
             <h5 class="card-title"><%= court.name %></h5>
             <p class="card-text"><%= court.location %></p>
             <p class="card-text">Capacidade: <%= court.capacity %></p>
+            <p class="card-text">Dono: <%= court.owner.name %></p>
+
             <a href="<%= court_path(court) %>" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i> Ver
             </a>
+
+            <% if current_user.admin? || (current_user.court_owner? && court.owner == current_user) %>
+              <a href="<%= edit_court_path(court) %>" class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+
+              <%= link_to court_path(court), 
+                    method: :delete, 
+                    data: { confirm: "Tem certeza que deseja excluir esta quadra?" }, 
+                    class: "btn btn-danger btn-sm" do %>
+                <i class="bi bi-trash"></i> Excluir
+              <% end %>
+            <% end %>
           </div>
         </div>
       </div>
     <% end %>
   </div>
-
-  <a href="<%= new_court_path %>" class="btn btn-primary">
-    <i class="bi bi-plus-circle"></i> Nova Quadra
-  </a>
 </div>

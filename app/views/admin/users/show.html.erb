@@ -1,0 +1,28 @@
+<div class="container mt-4">
+  <h1><%= params[:role].titleize %></h1>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><%= @user.name %></h5>
+      <p class="card-text">
+        <strong>Email:</strong> <%= @user.email %><br>
+        <strong>Telefone:</strong> <%= @user.phone_number %><br>
+        <strong>Criado em:</strong> <%= l(@user.created_at, format: :long) %><br>
+        <strong>Atualizado em:</strong> <%= l(@user.updated_at, format: :long) %>
+      </p>
+
+      <%= link_to "Editar", 
+          params[:role] == "client" ? edit_admin_client_path(@user) : edit_admin_court_owner_path(@user), 
+          class: "btn btn-warning" %>
+      <%= button_to "Excluir", 
+          params[:role] == "client" ? admin_client_path(@user) : admin_court_owner_path(@user), 
+          method: :delete, 
+          class: "btn btn-danger",
+          form: { style: 'display: inline-block' },
+          data: { confirm: "Tem certeza?" } %>
+      <%= link_to "Voltar", 
+          params[:role] == "client" ? admin_clients_path : admin_court_owners_path, 
+          class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

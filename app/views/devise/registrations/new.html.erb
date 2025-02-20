@@ -1,29 +1,59 @@
-<h2>Sign up</h2>
+<div class="container mt-4">
+  <% if @user&.court_owner? %>
+    <h2 class="text-center">Cadastro de Dono de Quadra</h2>
+    <p class="text-center">Preencha os dados abaixo para se cadastrar como dono de quadra.</p>
+  <% else %>
+    <h2 class="text-center">Cadastro de Cliente</h2>
+    <p class="text-center">Preencha os dados abaixo para se cadastrar como cliente.</p>
+  <% end %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <div class="mb-3">
+      <%= f.label :name, "Nome", class: "form-label" %>
+      <%= f.text_field :name, autofocus: true, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :email, "Email", class: "form-label" %>
+      <%= f.email_field :email, autocomplete: "email", class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :password, "Senha", class: "form-label" %>
+      <% if @minimum_password_length %>
+        <em>(<%= @minimum_password_length %> caracteres no mínimo)</em>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :password_confirmation, "Confirme sua senha", class: "form-label" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+    </div>
+
+    <%= f.hidden_field :role, value: @user&.role || "client" %>
+
+    <div class="d-grid gap-2">
+      <% if @user&.court_owner? %>
+        <%= f.submit "Criar conta como Dono de Quadra", class: "btn btn-secondary" %>
+      <% else %>
+        <%= f.submit "Criar conta como Cliente", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <hr>
+
+  <div class="text-center mt-3">
+    <% unless @user&.court_owner? %>
+      <p><strong>É dono de quadra?</strong></p>
+      <%= link_to "Cadastre-se como Dono de Quadra", new_court_owner_registration_path, class: "btn btn-secondary" %>
+    <% end %>
   </div>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
+  <div class="text-center mt-3">
+    <%= render "devise/shared/links" %>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

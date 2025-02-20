@@ -1,0 +1,46 @@
+<div class="container mt-4">
+  <h1>Novo <%= params[:role].titleize %></h1>
+
+  <%= form_for @user, url: params[:role] == "client" ? admin_clients_path : admin_court_owners_path do |f| %>
+    <% if @user.errors.any? %>
+      <div class="alert alert-danger">
+        <h2><%= pluralize(@user.errors.count, "erro") %> encontrado:</h2>
+        <ul>
+          <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :name, "Nome", class: "form-label" %>
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :email, "Email", class: "form-label" %>
+      <%= f.email_field :email, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :phone_number, "Telefone", class: "form-label" %>
+      <%= f.text_field :phone_number, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :password, "Senha", class: "form-label" %>
+      <%= f.password_field :password, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :password_confirmation, "Confirmar Senha", class: "form-label" %>
+      <%= f.password_field :password_confirmation, class: "form-control" %>
+    </div>
+
+    <%= f.submit "Criar #{params[:role].titleize}", class: "btn btn-primary" %>
+    <%= link_to "Voltar", 
+        params[:role] == "client" ? admin_clients_path : admin_court_owners_path, 
+        class: "btn btn-secondary" %>
+  <% end %>
+</div>

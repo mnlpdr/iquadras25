@@ -19,7 +19,7 @@
         <tr>
           <td><%= court_owner.name %></td>
           <td><%= court_owner.email %></td>
-          <td><%= court_owner.phone_number %></td>
+          <td><%= court_owner.phone_number.present? ? court_owner.phone_number : "Não informado" %></td>
           <td>
             <a href="<%= court_owner_path(court_owner) %>" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i> Ver
@@ -27,7 +27,10 @@
             <a href="<%= edit_court_owner_path(court_owner) %>" class="btn btn-warning btn-sm">
               <i class="bi bi-pencil"></i> Editar
             </a>
-            <%= link_to "Excluir", court_owner, method: :delete, class: "btn btn-danger btn-sm", data: { confirm: "Tem certeza?" } %>
+
+            <%= form_with url: court_owner_path(court_owner), method: :delete, data: { confirm: "Tem certeza que deseja excluir este dono de quadra?" }, class: "d-inline" do %>
+              <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+            <% end %>
           </td>
         </tr>
       <% end %>

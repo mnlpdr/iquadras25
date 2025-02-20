@@ -5,13 +5,16 @@
     <h5 class="card-title"><%= @client.name %></h5>
     <p class="card-text"><strong>Email:</strong> <%= @client.email %></p>
     <p class="card-text"><strong>Telefone:</strong> <%= @client.phone_number.present? ? @client.phone_number : "Não informado" %></p>
-    <p class="card-text"><strong>Endereço:</strong> <%= @client.address.present? ? @client.address : "Não informado" %></p>
-    <p class="card-text"><strong>Data de nascimento:</strong> <%= @client.birthdate.present? ? l(@client.birthdate) : "Não informado" %></p>
 
     <div class="d-flex justify-content-between mt-3">
       <%= link_to "Voltar", clients_path, class: "btn btn-secondary" %>
       <%= link_to "Editar", edit_client_path(@client), class: "btn btn-warning" %>
-      <%= link_to "Excluir", @client, method: :delete, class: "btn btn-danger", data: { confirm: "Tem certeza que deseja excluir este cliente?" } %>
+      <%= form_with url: client_path(@client), method: :delete, 
+      data: { confirm: "Tem certeza que deseja excluir este cliente?" }, 
+      class: "d-inline" do %>
+  <button type="submit" class="btn btn-danger">Excluir</button>
+<% end %>
+  
     </div>
   </div>
 </div>

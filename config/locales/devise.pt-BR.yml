@@ -1,0 +1,11 @@
+pt-BR:
+  devise:
+    failure:
+      not_found_in_database: "E-mail ou senha inválidos."
+      invalid: "E-mail ou senha incorretos."
+      unauthenticated: "Você precisa fazer login antes de continuar."
+      timeout: "Sua sessão expirou, faça login novamente."
+      locked: "Sua conta está bloqueada."
+      inactive: "Sua conta ainda não foi ativada."
+      unconfirmed: "Você precisa confirmar sua conta antes de fazer login."
+

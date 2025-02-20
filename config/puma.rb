@@ -4,7 +4,8 @@ min_threads_count = ENV.fetch("RAILS_MIN_THREADS") { max_threads_count }
 threads min_threads_count, max_threads_count
 
 # Specify the port puma will listen on
-port ENV.fetch("PORT") { 3001 }
+# Alterado para rodar APENAS na porta 3000
+port ENV.fetch("PORT") { 3000 }
 
 # Specify the environment
 environment ENV.fetch("RAILS_ENV") { "development" }
@@ -28,7 +29,8 @@ end
 plugin :tmp_restart
 
 # Set up socket for better performance
-bind "tcp://127.0.0.1:3000"
+# A linha abaixo foi removida pois já estamos definindo a porta acima
+# bind "tcp://127.0.0.1:3000"
 
 # Increase the timeout
 persistent_timeout 65
@@ -45,5 +47,4 @@ stdout_redirect 'log/puma.stdout.log', 'log/puma.stderr.log', true
 # Garante que cada worker reconecte ao banco de dados ao iniciar
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
-  
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_30_030257) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_20_091412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_030257) do
     t.integer "capacity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "owner_id"
+    t.decimal "price_per_hour", precision: 10, scale: 2
+    t.index ["owner_id"], name: "index_courts_on_owner_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -50,8 +53,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_030257) do
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.index ["court_id"], name: "index_reservations_on_court_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
+  end
+
+  create_table "test_enums", force: :cascade do |t|
+    t.integer "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -63,10 +74,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_030257) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.integer "role", default: 0, null: false
+    t.string "phone_number"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "courts", "users", column: "owner_id"
   add_foreign_key "reservations", "courts"
   add_foreign_key "reservations", "users"
 end

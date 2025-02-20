@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>iQuadras</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
@@ -16,30 +17,43 @@
 </head>
 <body class="bg-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="<%= root_path %>">iQuadras</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="<%= root_path %>">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%= reservations_path %>">Reservas</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%= courts_path %>">Quadras</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%= clients_path %>">Clientes</a></li>
-          <li class="nav-item"><a class="nav-link" href="<%= court_owners_path %>">Donos de Quadras</a></li>
+  <div class="container">
+    <a class="navbar-brand" href="<%= root_path %>">iQuadras</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="<%= root_path %>">Home</a></li>
 
-          <% if user_signed_in? %>
-            <li class="nav-item">
-              <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-danger text-white nav-link", form: { class: "d-inline-block" } %>
-            </li>
-          <% else %>
-            <li class="nav-item"><a class="nav-link btn btn-primary text-white" href="<%= new_user_session_path %>">Entrar</a></li>
+        <% if user_signed_in? %>
+          <li class="nav-item"><a class="nav-link" href="<%= reservations_path %>">Reservas</a></li>
+
+          <% if current_user.client? %>
+            <li class="nav-item"><a class="nav-link" href="<%= courts_path %>">Quadras</a></li>
           <% end %>
-        </ul>
-      </div>
+
+          <% if current_user.court_owner? %>
+            <li class="nav-item"><a class="nav-link" href="<%= courts_path %>">Minhas Quadras</a></li>
+          <% end %>
+
+          <% if current_user.admin? %>
+            <li class="nav-item"><a class="nav-link" href="<%= courts_path %>">Quadras</a></li>
+            <li class="nav-item"><a class="nav-link" href="<%= admin_clients_path %>">Clientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="<%= admin_court_owners_path %>">Donos de Quadras</a></li>
+          <% end %>
+
+          <li class="nav-item">
+            <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-danger text-white nav-link", form: { class: "d-inline-block" } %>
+          </li>
+        <% else %>
+          <li class="nav-item"><a class="nav-link btn btn-primary text-white" href="<%= new_user_session_path %>">Entrar</a></li>
+        <% end %>
+      </ul>
     </div>
+  </div>
   </nav>
+
 
   <div class="container mt-4">
     <%= yield %>

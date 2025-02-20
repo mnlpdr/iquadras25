@@ -4,8 +4,7 @@ class CreateClients < ActiveRecord::Migration[7.0]
       t.string :name, null: false
       t.string :email, null: false, unique: true
       t.string :phone_number
-      t.string :address
-      t.date :birthdate
+
 
       t.timestamps
     end

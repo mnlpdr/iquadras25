@@ -9,59 +9,88 @@
     </div>
 
     <div class="container">
-    <div class="row mt-4">
-      <div class="col-md-6 d-flex">
-        <div class="card text-center shadow flex-fill d-flex flex-column">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="card-title">Reservas</h5>
-              <p class="card-text mb-4">Gerencie suas reservas facilmente.</p>
+      <div class="row gy-4 mt-4">
+        <!-- Reservas (Disponível para todos os usuários logados) -->
+        <div class="col-md-6 d-flex">
+          <div class="card text-center shadow flex-fill d-flex flex-column">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title">Reservas</h5>
+                <p class="card-text mb-4">Gerencie suas reservas facilmente.</p>
+              </div>
+              <a href="<%= reservations_path %>" class="btn btn-primary mt-auto">Ver Reservas</a>
             </div>
-            <a href="<%= reservations_path %>" class="btn btn-primary mt-auto">Ver Reservas</a>
           </div>
         </div>
-      </div>
-  
-      <div class="col-md-6 d-flex">
-        <div class="card text-center shadow flex-fill d-flex flex-column">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="card-title">Quadras</h5>
-              <p class="card-text mb-4">Visualize e gerencie quadras disponíveis.</p>
+
+        <!-- Quadras (Clientes podem ver todas, Donos podem ver apenas as suas, Admin pode gerenciar todas) -->
+        <% if current_user.client? %>
+          <div class="col-md-6 d-flex">
+            <div class="card text-center shadow flex-fill d-flex flex-column">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">Quadras</h5>
+                  <p class="card-text mb-4">Visualize quadras disponíveis.</p>
+                </div>
+                <a href="<%= courts_path %>" class="btn btn-primary mt-auto">Ver Quadras</a>
+              </div>
             </div>
-            <a href="<%= courts_path %>" class="btn btn-primary mt-auto">Ver Quadras</a>
           </div>
-        </div>
+        <% end %>
+
+        <% if current_user.court_owner? %>
+          <div class="col-md-6 d-flex">
+            <div class="card text-center shadow flex-fill d-flex flex-column">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">Minhas Quadras</h5>
+                  <p class="card-text mb-4">Gerencie suas próprias quadras.</p>
+                </div>
+                <a href="<%= courts_path %>" class="btn btn-primary mt-auto">Ver Minhas Quadras</a>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if current_user.admin? %>
+          <div class="col-md-6 d-flex">
+            <div class="card text-center shadow flex-fill d-flex flex-column">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">Gerenciar Quadras</h5>
+                  <p class="card-text mb-4">Visualize e edite todas as quadras.</p>
+                </div>
+                <a href="<%= courts_path %>" class="btn btn-primary mt-auto">Ver Quadras</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 d-flex">
+            <div class="card text-center shadow flex-fill d-flex flex-column">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">Clientes</h5>
+                  <p class="card-text mb-4">Gerencie os clientes cadastrados.</p>
+                </div>
+                <a href="<%= admin_clients_path %>" class="btn btn-primary mt-auto">Ver Clientes</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 d-flex">
+            <div class="card text-center shadow flex-fill d-flex flex-column">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">Donos de Quadras</h5>
+                  <p class="card-text mb-4">Gerencie os donos de quadras.</p>
+                </div>
+                <a href="<%= admin_court_owners_path %>" class="btn btn-primary mt-auto">Ver Donos de Quadras</a>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
-  
-    <div class="row mt-4">
-      <div class="col-md-6 d-flex">
-        <div class="card text-center shadow flex-fill d-flex flex-column">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="card-title">Clientes</h5>
-              <p class="card-text mb-4">Gerencie os clientes cadastrados no sistema.</p>
-            </div>
-            <a href="<%= clients_path %>" class="btn btn-primary mt-auto">Ver Clientes</a>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-md-6 d-flex">
-        <div class="card text-center shadow flex-fill d-flex flex-column">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="card-title">Donos de Quadras</h5>
-              <p class="card-text mb-4">Gerencie os donos de quadras cadastrados.</p>
-            </div>
-            <a href="<%= court_owners_path %>" class="btn btn-primary mt-auto">Ver Donos de Quadras</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
   <% else %>
     <div class="text-center mt-4">
       <a href="<%= new_user_session_path %>" class="btn btn-success btn-lg">Faça Login</a>

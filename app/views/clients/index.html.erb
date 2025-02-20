@@ -27,7 +27,7 @@
             <a href="<%= edit_client_path(client) %>" class="btn btn-warning btn-sm">
               <i class="bi bi-pencil"></i> Editar
             </a>
-            <%= link_to "Excluir", client, method: :delete, class: "btn btn-danger btn-sm", data: { confirm: "Tem certeza?" } %>
+            <%= link_to "Excluir", client_path(client), method: :delete, class: "btn btn-danger btn-sm", data: { confirm: "Tem certeza?" } %>
           </td>
         </tr>
       <% end %>

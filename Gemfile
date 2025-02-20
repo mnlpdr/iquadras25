@@ -49,6 +49,12 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'shoulda-matchers'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do
@@ -73,3 +79,8 @@ gem "cssbundling-rails", "~> 1.4"
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'puma_worker_killer'
+
+group :development, :test do
+  gem 'rspec-rails'
+end
+gem "cancancan", "~> 3.6"

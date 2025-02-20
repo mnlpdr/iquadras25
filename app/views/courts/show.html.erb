@@ -1,10 +1,51 @@
-<p style="color: green"><%= notice %></p>
+<div class="container mt-4">
+  <h1 class="mb-4">Quadra</h1>
 
-<%= render @court %>
+  <p><strong>Nome:</strong> <%= @court.name %></p>
+  <p><strong>Localização:</strong> <%= @court.location %></p>
+  <p><strong>Capacidade:</strong> <%= @court.capacity %></p>
+  <p><strong>Dono:</strong> <%= @court.owner.name %></p>
 
-<div>
-  <%= link_to "Edit this court", edit_court_path(@court) %> |
-  <%= link_to "Back to courts", courts_path %>
+  <hr>
 
-  <%= button_to "Destroy this court", @court, method: :delete %>
+  <h3>Reservas</h3>
+  
+  <% if @court.reservations.any? %>
+    <ul class="list-group mb-3">
+      <% @court.reservations.each do |reservation| %>
+        <li class="list-group-item">
+          <strong>Data e horário:</strong> <%= reservation.start_time.strftime("%d/%m/%Y %H:%M") %> - <%= reservation.end_time.strftime("%H:%M") %>
+          <% if current_user.court_owner? || current_user.admin? %>
+            <br><strong>Reservado por:</strong> <%= reservation.user.name %> (<%= reservation.user.email %>)
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-muted">Nenhuma reserva feita até agora.</p>
+  <% end %>
+
+  <% if user_signed_in? && current_user.client? %>
+    <a href="<%= new_reservation_path(court_id: @court.id) %>" class="btn btn-success">
+      <i class="bi bi-calendar-plus"></i> Fazer uma reserva
+    </a>
+  <% end %>
+
+  <hr>
+
+  <% if current_user.admin? || (current_user.court_owner? && @court.owner == current_user) %>
+    <a href="<%= edit_court_path(@court) %>" class="btn btn-warning">
+      <i class="bi bi-pencil"></i> Editar esta quadra
+    </a>
+
+    <%= form_with url: court_path(@court), method: :delete, data: { confirm: "Tem certeza que deseja excluir esta quadra?" }, class: "d-inline" do %>
+      <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Excluir esta quadra
+      </button>
+    <% end %>
+  <% end %>
+
+  <a href="<%= courts_path %>" class="btn btn-secondary">
+    <i class="bi bi-arrow-left"></i> Voltar para quadras
+  </a>
 </div>

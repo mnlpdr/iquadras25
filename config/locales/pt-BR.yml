@@ -4,11 +4,40 @@ pt-BR:
   activerecord:
     models:
       court: "Quadra"
+      user: "Usuário"
     attributes:
       court:
         name: "Nome"
         location: "Localização"
         capacity: "Capacidade"
+      user:
+        name: "Nome"
+        email: "E-mail"
+        password: "Senha"
+        role: "Tipo de usuário"
+      reservation:
+        start_time: "Horário de início"
+        end_time: "Horário de término"
+
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "já está em uso"
+        reservation:
+          attributes:
+            end_time:
+              after_start_time: "deve ser depois do horário de início."
+      messages:
+        record_invalid: "Validação falhou: %{errors}"
+        taken: "já está em uso"
+        blank: "não pode ficar em branco"
+        too_short: "é muito curto (mínimo de %{count} caracteres)"
+        too_long: "é muito longo (máximo de %{count} caracteres)"
+        invalid: "não é válido"
+        confirmation: "não corresponde à confirmação"
+        
 
   helpers:
     submit:
@@ -25,7 +54,7 @@ pt-BR:
   date:
     formats:
       default: "%d/%m/%Y"
-      short: "%d %b"
+      short: "%d de %B"
       long: "%d de %B de %Y"
     order:
       - :day
@@ -44,4 +73,20 @@ pt-BR:
       - Setembro
       - Outubro
       - Novembro
-      - Dezembro      
+      - Dezembro
+
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d/%m %H:%M"
+      long: "%d de %B de %Y às %H:%M"
+      time: "%H:%M"  # Formato apenas para hora
+
+  devise:
+    registrations:
+      user:
+        signed_up: "Bem-vindo! Você se cadastrou com sucesso."
+        signed_up_but_unconfirmed: "Uma mensagem com um link de confirmação foi enviada para seu e-mail. Por favor, abra o link para ativar sua conta."
+        signed_up_but_inactive: "Você se cadastrou com sucesso. No entanto, não podemos logá-lo porque sua conta ainda não foi ativada."
+        signed_up_but_locked: "Você se cadastrou com sucesso. No entanto, não podemos logá-lo porque sua conta está bloqueada."
+      signed_up: "Bem-vindo! Você se cadastrou com sucesso."
