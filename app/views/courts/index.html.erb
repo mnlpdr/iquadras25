@@ -41,6 +41,12 @@
               <p class="card-text"><em>Sem esportes cadastrados</em></p>
             <% end %>
 
+            <% if court.working_hours.present? %>
+              <p class="card-text"><strong>Horário de Funcionamento:</strong> <%= court.working_hours %></p>
+            <% else %>
+              <p class="card-text text-danger"><em>Horário de funcionamento não cadastrado</em></p>
+            <% end %>
+
             <a href="<%= court_path(court) %>" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i> Ver
             </a>

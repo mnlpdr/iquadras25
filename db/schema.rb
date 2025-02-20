@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_19_235254) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_20_012456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_235254) do
     t.integer "capacity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "working_hours"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -59,6 +60,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_19_235254) do
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.index ["court_id"], name: "index_reservations_on_court_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end

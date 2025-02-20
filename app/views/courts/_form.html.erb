@@ -32,6 +32,12 @@
     <%= label_tag "court_sport_#{sport.id}", sport.name %><br>
   <% end %>
 
+  <div class="form-group">
+    <%= form.label :working_hours, "Horário de Funcionamento (formato HH:MM-HH:MM)" %>
+    <%= form.text_field :working_hours, class: "form-control", placeholder: "08:00-18:00" %>
+  </div>
+
+
 
   <div>
     <%= form.submit %>

@@ -71,7 +71,7 @@ class CourtsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def court_params
-      params.require(:court).permit(:name, :location, :capacity, sport_ids: [])
+      params.require(:court).permit(:name, :location, :capacity, :working_hours)
     end
 
     def set_sports
