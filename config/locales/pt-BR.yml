@@ -21,6 +21,11 @@ pt-BR:
     create_success: "%{model} foi criado(a) com sucesso."
     update_success: "%{model} foi atualizado(a) com sucesso."
     destroy_success: "%{model} foi excluído(a) com sucesso."
+  
+  time:
+    formats:
+      short: "%H:%M" # Exemplo: 14:30
+      long: "%H:%M:%S" # Exemplo: 14:30:15
 
   date:
     formats:
