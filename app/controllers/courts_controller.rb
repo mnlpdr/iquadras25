@@ -1,16 +1,20 @@
 class CourtsController < ApplicationController
   before_action :authenticate_user!
+  load_and_authorize_resource
   before_action :set_court, only: [:show, :edit, :update, :destroy]
   before_action :authorize_admin_or_owner, only: [:edit, :update, :destroy]
+  before_action :set_sports, only: [:index, :new, :edit, :create, :update]
 
   def index
-    if current_user.admin?
-      @courts = Court.all  # Admin vê todas as quadras
+    base_query = if current_user.admin?
+      Court.all
     elsif current_user.court_owner?
-      @courts = current_user.courts  # Dono de quadra vê apenas suas próprias quadras
+      current_user.courts
     else
-      @courts = Court.all  # Clientes veem todas, mas sem editar
+      Court.all
     end
+
+    @courts = base_query.by_sport(params[:sport_id])
   end
 
   def show
@@ -36,6 +40,7 @@ class CourtsController < ApplicationController
     end
 
     if @court.save
+      NotificationService.notify_court_created(@court)
       redirect_to courts_path, notice: "Quadra criada com sucesso!"
     else
       flash.now[:alert] = @court.errors.full_messages.join(", ")
@@ -48,6 +53,7 @@ class CourtsController < ApplicationController
 
   def update
     if @court.update(court_params)
+      NotificationService.notify_court_updated(@court)
       redirect_to courts_path, notice: "Quadra atualizada com sucesso!"
     else
       flash.now[:alert] = @court.errors.full_messages.join(", ")
@@ -57,6 +63,7 @@ class CourtsController < ApplicationController
 
   def destroy
     if current_user.admin? || (current_user.court_owner? && @court.owner == current_user)
+      NotificationService.notify_court_deleted(@court)
       @court.destroy
       redirect_to courts_path, notice: "Quadra removida com sucesso!"
     else
@@ -74,10 +81,10 @@ class CourtsController < ApplicationController
   end
 
   def court_params
-    if current_user.admin?
-      params.require(:court).permit(:name, :location, :capacity, :price_per_hour, :owner_id)
+    permitted_params = if current_user.admin?
+      params.require(:court).permit(:name, :location, :capacity, :price_per_hour, :owner_id, sport_ids: [])
     else
-      params.require(:court).permit(:name, :location, :capacity, :price_per_hour)
+      params.require(:court).permit(:name, :location, :capacity, :price_per_hour, sport_ids: [])
     end
   end
 
@@ -85,5 +92,9 @@ class CourtsController < ApplicationController
     unless current_user.admin? || (current_user.court_owner? && current_user == @court.owner)
       redirect_to courts_path, alert: "Acesso negado!"
     end
+  end
+
+  def set_sports
+    @sports = Sport.all
   end
 end

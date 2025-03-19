@@ -5,6 +5,7 @@ pt-BR:
     models:
       court: "Quadra"
       user: "Usuário"
+      notification_log: "Log de Notificação"
     attributes:
       court:
         name: "Nome"
@@ -18,6 +19,11 @@ pt-BR:
       reservation:
         start_time: "Horário de início"
         end_time: "Horário de término"
+      notification_log:
+        created_at: "Data"
+        notification_type: "Tipo"
+        message: "Mensagem"
+        status: "Status"
 
     errors:
       models:
@@ -90,3 +96,11 @@ pt-BR:
         signed_up_but_inactive: "Você se cadastrou com sucesso. No entanto, não podemos logá-lo porque sua conta ainda não foi ativada."
         signed_up_but_locked: "Você se cadastrou com sucesso. No entanto, não podemos logá-lo porque sua conta está bloqueada."
       signed_up: "Bem-vindo! Você se cadastrou com sucesso."
+
+  views:
+    pagination:
+      first: "&laquo; Primeira"
+      last: "Última &raquo;"
+      previous: "&lsaquo; Anterior"
+      next: "Próxima &rsaquo;"
+      truncate: "&hellip;"

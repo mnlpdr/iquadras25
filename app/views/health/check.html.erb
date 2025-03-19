@@ -1,0 +1,77 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Status do Sistema</h2>
+    </div>
+    <div class="card-body">
+      <div class="mb-4">
+        <h3>Status Geral: 
+          <span class="badge <%= @overall_status == 'ok' ? 'bg-success' : 'bg-danger' %>">
+            <%= @overall_status == 'ok' ? 'Funcionando' : 'Degradado' %>
+          </span>
+        </h3>
+        <p class="text-muted">Última verificação: <%= l(@health_status[:timestamp], format: :long) %></p>
+      </div>
+
+      <h4>Serviços:</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Serviço</th>
+            <th>Status</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Banco de Dados</td>
+            <td>
+              <span class="badge <%= @health_status[:database] ? 'bg-success' : 'bg-danger' %>">
+                <%= @health_status[:database] ? 'Online' : 'Offline' %>
+              </span>
+            </td>
+            <td>Conexão com o banco de dados PostgreSQL</td>
+          </tr>
+          <tr>
+            <td>Redis Principal</td>
+            <td>
+              <span class="badge <%= @health_status[:redis_primary] ? 'bg-success' : 'bg-danger' %>">
+                <%= @health_status[:redis_primary] ? 'Online' : 'Offline' %>
+              </span>
+            </td>
+            <td>Servidor Redis principal (porta 6379)</td>
+          </tr>
+          <tr>
+            <td>Redis Réplica</td>
+            <td>
+              <span class="badge <%= @health_status[:redis_replica] ? 'bg-success' : 'bg-danger' %>">
+                <%= @health_status[:redis_replica] ? 'Online' : 'Offline' %>
+              </span>
+            </td>
+            <td>Servidor Redis réplica (porta 6380)</td>
+          </tr>
+          <tr>
+            <td>Sidekiq</td>
+            <td>
+              <span class="badge <%= @health_status[:sidekiq] ? 'bg-success' : 'bg-danger' %>">
+                <%= @health_status[:sidekiq] ? 'Ativo' : 'Inativo' %>
+              </span>
+            </td>
+            <td>Processamento de tarefas em background</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <a href="<%= admin_dashboard_path %>" class="btn btn-primary">
+        <i class="bi bi-speedometer2"></i> Dashboard Admin
+      </a>
+      <a href="<%= sidekiq_web_path %>" class="btn btn-info">
+        <i class="bi bi-list-task"></i> Sidekiq Dashboard
+      </a>
+      <button class="btn btn-secondary" onclick="window.location.reload()">
+        <i class="bi bi-arrow-clockwise"></i> Atualizar
+      </button>
+    </div>
+  </div>
+</div> 

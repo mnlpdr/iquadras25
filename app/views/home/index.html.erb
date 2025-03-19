@@ -88,6 +88,21 @@
               </div>
             </div>
           </div>
+
+          <!-- Card de Logs de Notificações (apenas para admin) -->
+          <div class="col-md-6 d-flex">
+            <div class="card text-center shadow flex-fill d-flex flex-column">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="card-title">Logs de Notificações</h5>
+                  <p class="card-text mb-4">Monitore todas as notificações enviadas pelo sistema.</p>
+                </div>
+                <%= link_to admin_notification_logs_path, class: "btn btn-primary mt-auto" do %>
+                  <i class="bi bi-list-check"></i> Ver Logs
+                <% end %>
+              </div>
+            </div>
+          </div>
         <% end %>
       </div>
     </div>

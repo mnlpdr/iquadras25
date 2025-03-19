@@ -30,6 +30,26 @@
     <%= f.number_field :price_per_hour, step: :any, class: "form-control" %>
   </div>
 
+  <% if @sports.any? %>
+    <div class="mb-3">
+      <label class="form-label">Esportes Disponíveis</label>
+      <div class="row">
+        <% @sports.each do |sport| %>
+          <div class="col-md-4 mb-2">
+            <div class="form-check">
+              <%= check_box_tag "court[sport_ids][]", sport.id, 
+                  @court.sports.include?(sport), 
+                  id: "court_sport_#{sport.id}",
+                  class: "form-check-input" %>
+              <%= label_tag "court_sport_#{sport.id}", sport.name, class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <%= hidden_field_tag "court[sport_ids][]", nil %>
+    </div>
+  <% end %>
+
   <% if current_user.admin? %>
     <div class="mb-3">
       <%= f.label :owner_id, "Dono da Quadra", class: "form-label" %>

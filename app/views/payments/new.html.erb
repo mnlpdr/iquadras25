@@ -1,0 +1,80 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2>Pagamento da Reserva</h2>
+        </div>
+        <div class="card-body">
+          <div class="reservation-details mb-4">
+            <h4>Detalhes da Reserva</h4>
+            <p><strong>Quadra:</strong> <%= @reservation.court.name %></p>
+            <p><strong>Data:</strong> <%= l(@reservation.date, format: :long) %></p>
+            <p><strong>Horário:</strong> <%= @reservation.start_time.strftime('%H:%M') %> - <%= @reservation.end_time.strftime('%H:%M') %></p>
+            <p><strong>Valor:</strong> <%= number_to_currency(@reservation.total_price) %></p>
+          </div>
+          
+          <div class="payment-form">
+            <form id="payment-form" method="POST" action="<%= reservation_payments_path(@reservation) %>">
+              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+              <input type="hidden" name="payment_intent_id" id="payment_intent_id" value="<%= @payment.stripe_payment_intent_id %>">
+              
+              <div class="mb-3">
+                <label for="card-holder" class="form-label">Nome no cartão</label>
+                <input type="text" class="form-control" id="card-holder" placeholder="Nome como aparece no cartão">
+              </div>
+              
+              <div class="mb-3">
+                <label for="card-number" class="form-label">Número do cartão</label>
+                <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456">
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="card-expiry" class="form-label">Validade</label>
+                  <input type="text" class="form-control" id="card-expiry" placeholder="MM/AA">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="card-cvc" class="form-label">CVC</label>
+                  <input type="text" class="form-control" id="card-cvc" placeholder="123">
+                </div>
+              </div>
+              
+              <div id="error-message" class="text-danger mt-2"></div>
+              
+              <button type="submit" id="submit-button" class="btn btn-primary mt-3">
+                <div class="spinner d-none" id="spinner"></div>
+                <span id="button-text">Pagar agora</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Simplificando para um formulário básico sem Stripe Elements
+    const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit-button');
+    const spinner = document.getElementById('spinner');
+    const buttonText = document.getElementById('button-text');
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Desabilitar o botão e mostrar spinner
+      submitButton.disabled = true;
+      spinner.classList.remove('d-none');
+      buttonText.textContent = 'Processando...';
+      
+      // Simular processamento
+      setTimeout(function() {
+        // Enviar o formulário normalmente
+        form.submit();
+      }, 1500);
+    });
+  });
+</script>

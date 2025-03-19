@@ -1,0 +1,83 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h2>Detalhes da Reserva</h2>
+        </div>
+        <div class="card-body">
+          <div class="reservation-details">
+            <h4 class="mb-4">Reserva #<%= @reservation.id %></h4>
+            
+            <div class="row mb-3">
+              <div class="col-md-4 fw-bold">Status:</div>
+              <div class="col-md-8">
+                <% case @reservation.status %>
+                <% when 'pending_payment' %>
+                  <span class="badge bg-warning">Aguardando Pagamento</span>
+                <% when 'confirmed' %>
+                  <span class="badge bg-success">Confirmada</span>
+                <% when 'cancelled' %>
+                  <span class="badge bg-danger">Cancelada</span>
+                <% when 'completed' %>
+                  <span class="badge bg-info">Concluída</span>
+                <% end %>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-4 fw-bold">Quadra:</div>
+              <div class="col-md-8"><%= @reservation.court.name %></div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-4 fw-bold">Local:</div>
+              <div class="col-md-8"><%= @reservation.court.location %></div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-4 fw-bold">Data:</div>
+              <div class="col-md-8"><%= l(@reservation.date, format: :long) %></div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-4 fw-bold">Horário:</div>
+              <div class="col-md-8"><%= @reservation.start_time.strftime('%H:%M') %> - <%= @reservation.end_time.strftime('%H:%M') %></div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-4 fw-bold">Valor:</div>
+              <div class="col-md-8"><%= number_to_currency(@reservation.total_price) %></div>
+            </div>
+            
+            <% if @reservation.payment.present? %>
+              <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Pagamento:</div>
+                <div class="col-md-8">
+                  <% case @reservation.payment.status %>
+                  <% when 'pending' %>
+                    <span class="badge bg-warning">Pendente</span>
+                  <% when 'completed' %>
+                    <span class="badge bg-success">Concluído</span>
+                  <% when 'failed' %>
+                    <span class="badge bg-danger">Falhou</span>
+                  <% when 'refunded' %>
+                    <span class="badge bg-info">Reembolsado</span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="mt-4">
+            <% if @reservation.status == 'pending_payment' %>
+              <%= link_to 'Realizar Pagamento', new_reservation_payment_path(@reservation), class: 'btn btn-primary' %>
+            <% end %>
+            
+            <%= link_to 'Voltar para Reservas', reservations_path, class: 'btn btn-secondary' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

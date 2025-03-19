@@ -55,6 +55,7 @@ group :development, :test do
   gem 'faker'
   gem 'shoulda-matchers'
   gem 'database_cleaner-active_record'
+  gem 'rails-controller-testing'
 end
 
 group :development do
@@ -70,7 +71,7 @@ end
 
 gem "devise", "~> 4.9"
 
-gem "bootstrap", "~> 5.3"
+gem "bootstrap", "~> 5.3.2"
 
 gem "sassc-rails", "~> 2.1"
 
@@ -84,3 +85,18 @@ group :development, :test do
   gem 'rspec-rails'
 end
 gem "cancancan", "~> 3.6"
+
+# Para processamento em background
+gem 'sidekiq'
+# Para envio de emails em produção
+gem 'sendgrid-ruby'
+
+# Para paginação
+gem 'kaminari'
+
+gem 'circuitbox'
+
+gem 'redis', '~> 4.8'
+gem 'redis-namespace'
+
+gem 'stripe'

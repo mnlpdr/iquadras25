@@ -4,7 +4,14 @@
   <p><strong>Nome:</strong> <%= @court.name %></p>
   <p><strong>Localização:</strong> <%= @court.location %></p>
   <p><strong>Capacidade:</strong> <%= @court.capacity %></p>
-  <p><strong>Dono:</strong> <%= @court.owner.name %></p>
+  <p><strong>Dono:</strong> <%= @court.owner&.name || "Não especificado" %></p>
+
+  <% if @court.sports.any? %>
+    <p>
+      <strong>Esportes disponíveis:</strong>
+      <%= @court.sports.pluck(:name).join(", ") %>
+    </p>
+  <% end %>
 
   <hr>
 

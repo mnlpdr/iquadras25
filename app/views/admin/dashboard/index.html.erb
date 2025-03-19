@@ -1,0 +1,162 @@
+<div class="container mt-4">
+  <h1>Dashboard Administrativo</h1>
+  
+  <div class="row mt-4">
+    <!-- Status do Sistema -->
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Status do Sistema</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-3">
+            <span>Status Geral:</span>
+            <% all_services_ok = @stats[:queues].present? && @stats[:failed] < 100 %>
+            <span class="badge <%= all_services_ok ? 'bg-success' : 'bg-danger' %>">
+              <%= all_services_ok ? 'Operacional' : 'Degradado' %>
+            </span>
+          </div>
+          
+          <a href="<%= health_path %>" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-activity"></i> Ver Status Detalhado
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Estatísticas do Sidekiq -->
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0">Processamento de Tarefas</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-3">
+                <strong>Processadas:</strong>
+                <span class="badge bg-success"><%= @stats[:processed] %></span>
+              </div>
+              <div class="mb-3">
+                <strong>Falhas:</strong>
+                <span class="badge bg-danger"><%= @stats[:failed] %></span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <strong>Agendadas:</strong>
+                <span class="badge bg-info"><%= @stats[:scheduled] %></span>
+              </div>
+              <div class="mb-3">
+                <strong>Retentativas:</strong>
+                <span class="badge bg-warning"><%= @stats[:retries] %></span>
+              </div>
+            </div>
+          </div>
+          
+          <a href="<%= sidekiq_web_path %>" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-list-task"></i> Dashboard Sidekiq
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Filas -->
+  <div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+      <h5 class="mb-0">Filas de Processamento</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Fila</th>
+              <th>Tarefas Pendentes</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @stats[:queues].empty? %>
+              <tr>
+                <td colspan="3" class="text-center">Nenhuma fila ativa no momento</td>
+              </tr>
+            <% else %>
+              <% @stats[:queues].each do |queue, size| %>
+                <tr>
+                  <td><%= queue %></td>
+                  <td><%= size %></td>
+                  <td>
+                    <% if size == 0 %>
+                      <span class="badge bg-success">Vazia</span>
+                    <% elsif size < 10 %>
+                      <span class="badge bg-info">Normal</span>
+                    <% elsif size < 50 %>
+                      <span class="badge bg-warning">Moderada</span>
+                    <% else %>
+                      <span class="badge bg-danger">Sobrecarregada</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Últimas Notificações -->
+  <div class="card">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Últimas Notificações</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Usuário</th>
+              <th>Status</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @notification_logs.empty? %>
+              <tr>
+                <td colspan="5" class="text-center">Nenhuma notificação registrada</td>
+              </tr>
+            <% else %>
+              <% @notification_logs.each do |log| %>
+                <tr>
+                  <td><%= log.notification_type %></td>
+                  <td><%= log.user&.email || 'N/A' %></td>
+                  <td>
+                    <span class="badge <%= log.status == 'sent' ? 'bg-success' : 'bg-danger' %>">
+                      <%= log.status %>
+                    </span>
+                  </td>
+                  <td><%= l(log.created_at, format: :short) %></td>
+                  <td>
+                    <a href="<%= admin_notification_log_path(log) %>" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="mt-3">
+        <a href="<%= admin_notification_logs_path %>" class="btn btn-outline-dark btn-sm">
+          <i class="bi bi-list-check"></i> Ver Todos os Logs
+        </a>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   # Configuração do Devise para autenticação
   devise_for :users, controllers: { registrations: "registrations" }
@@ -12,10 +14,11 @@ Rails.application.routes.draw do
 
   # Rotas para Quadras
   resources :courts
-  resources :reservations, only: [:index, :new, :create, :destroy] do
+  resources :reservations, only: [:index, :new, :create, :show, :destroy] do
     collection do
       get 'available_slots'
     end
+    resources :payments, only: [:new, :create]
   end
 
   # Área administrativa
@@ -24,8 +27,20 @@ Rails.application.routes.draw do
     resources :court_owners, controller: 'users', defaults: { role: 'court_owner' }
     resources :courts, only: [:destroy]
     resources :reservations
+    resources :notification_logs, only: [:index, :show]
+    get 'dashboard', to: 'dashboard#index'
   end
 
   # Rota de Health Check
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Adicione isso antes das outras rotas
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
+  get "health" => "health#check"
+
+  # Rota para webhooks do Stripe
+  post 'stripe/webhook', to: 'payments#webhook'
 end

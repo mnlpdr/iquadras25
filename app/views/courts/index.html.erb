@@ -1,45 +1,110 @@
-<div class="container">
-  <h1 class="text-center my-4">Quadras</h1>
+<div class="container mt-4" data-controller="court-search">
+  <h1 class="mb-4">
+    <% if current_user.court_owner? %>
+      Minhas Quadras
+    <% else %>
+      Quadras Disponíveis
+    <% end %>
+  </h1>
 
-  <% if notice %>
-    <div class="alert alert-success"><%= notice %></div>
+  <% if @sports.any? %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row align-items-end">
+          <div class="col-md-6">
+            <label class="form-label">Buscar quadra</label>
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Digite o nome ou localização"
+                   data-court-search-target="input"
+                   data-action="input->court-search#filter">
+          </div>
+          <div class="col-md-6">
+            <%= select_tag :sport_id,
+                options_from_collection_for_select(@sports, :id, :name, params[:sport_id]),
+                prompt: "Todos os esportes",
+                class: "form-select",
+                data: {
+                  court_search_target: "sportSelect",
+                  action: "change->court-search#filter"
+                } %>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
 
   <% if current_user.admin? || current_user.court_owner? %>
-    <a href="<%= new_court_path %>" class="btn btn-primary mb-3">
+    <%= link_to new_court_path, class: "btn btn-primary mb-4" do %>
       <i class="bi bi-plus-circle"></i> Nova Quadra
-    </a>
+    <% end %>
   <% end %>
 
-  <div class="row">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
     <% @courts.each do |court| %>
-      <div class="col-md-4">
-        <div class="card mb-3">
+      <div class="col" 
+           data-court-search-target="card"
+           data-name="<%= court.name %>"
+           data-location="<%= court.location %>"
+           data-sport-ids="<%= court.sport_ids.join(',') %>">
+        <div class="card h-100 shadow-sm">
           <div class="card-body">
             <h5 class="card-title"><%= court.name %></h5>
-            <p class="card-text"><%= court.location %></p>
-            <p class="card-text">Capacidade: <%= court.capacity %></p>
-            <p class="card-text">Dono: <%= court.owner.name %></p>
-
-            <a href="<%= court_path(court) %>" class="btn btn-info btn-sm">
-              <i class="bi bi-eye"></i> Ver
-            </a>
-
-            <% if current_user.admin? || (current_user.court_owner? && court.owner == current_user) %>
-              <a href="<%= edit_court_path(court) %>" class="btn btn-warning btn-sm">
-                <i class="bi bi-pencil"></i> Editar
-              </a>
-
-              <%= link_to court_path(court), 
-                    method: :delete, 
-                    data: { confirm: "Tem certeza que deseja excluir esta quadra?" }, 
-                    class: "btn btn-danger btn-sm" do %>
-                <i class="bi bi-trash"></i> Excluir
-              <% end %>
+            <p class="card-text">Localização: <%= court.location %></p>
+            <p class="card-text">Capacidade: <%= court.capacity %> pessoas</p>
+            <p class="card-text">Preço/hora: R$ <%= number_with_precision(court.price_per_hour, precision: 2) %></p>
+            <p class="card-text">Dono: <%= court.owner&.name || "Não especificado" %></p>
+            
+            <% if court.sports.any? %>
+              <p class="card-text">
+                <small class="text-muted">
+                  Esportes: <%= court.sports.pluck(:name).join(", ") %>
+                </small>
+              </p>
             <% end %>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <%= link_to court_path(court), class: "btn btn-info" do %>
+                <i class="bi bi-eye"></i> Ver Detalhes
+              <% end %>
+
+              <% if current_user.client? %>
+                <%= link_to new_reservation_path(court_id: court.id), class: "btn btn-success" do %>
+                  <i class="bi bi-calendar-plus"></i> Reservar
+                <% end %>
+              <% end %>
+
+              <% if can? :edit, court %>
+                <%= link_to edit_court_path(court), class: "btn btn-warning" do %>
+                  <i class="bi bi-pencil"></i> Editar
+                <% end %>
+              <% end %>
+
+              <% if can? :destroy, court %>
+                <%= button_to court_path(court), 
+                      method: :delete, 
+                      class: "btn btn-danger",
+                      data: { confirm: "Tem certeza que deseja excluir esta quadra?" } do %>
+                  <i class="bi bi-trash"></i> Excluir
+                <% end %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
     <% end %>
   </div>
+
+  <% if @courts.empty? %>
+    <div class="alert alert-info mt-4">
+      <% case current_user.role %>
+      <% when 'admin' %>
+        Não há quadras cadastradas no sistema.
+      <% when 'court_owner' %>
+        Você ainda não cadastrou nenhuma quadra.
+      <% else %>
+        Não há quadras disponíveis no momento.
+      <% end %>
+    </div>
+  <% end %>
 </div>

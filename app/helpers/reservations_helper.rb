@@ -19,10 +19,11 @@ module ReservationsHelper
     # Remove slots que já têm reservas
     all_slots.reject do |slot|
       existing_reservations.any? do |reservation|
-        (slot[:start_time] >= reservation.start_time.strftime("%H:%M") &&
-         slot[:start_time] < reservation.end_time.strftime("%H:%M")) ||
-        (slot[:end_time] > reservation.start_time.strftime("%H:%M") &&
-         slot[:end_time] <= reservation.end_time.strftime("%H:%M"))
+        slot_start = Time.zone.parse("#{date} #{slot[:start_time]}")
+        slot_end = Time.zone.parse("#{date} #{slot[:end_time]}")
+        
+        (slot_start >= reservation.start_time && slot_start < reservation.end_time) ||
+        (slot_end > reservation.start_time && slot_end <= reservation.end_time)
       end
     end
   end

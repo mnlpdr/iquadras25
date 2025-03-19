@@ -1,0 +1,122 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h2>Detalhes da Notificação</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Informações Básicas</h5>
+          <dl class="row">
+            <dt class="col-sm-4">ID:</dt>
+            <dd class="col-sm-8"><%= @notification_log.id %></dd>
+            
+            <dt class="col-sm-4">Tipo:</dt>
+            <dd class="col-sm-8">
+              <% case @notification_log.notification_type %>
+              <% when 'reservation_created' %>
+                <span class="badge bg-success">Reserva Criada</span>
+              <% when 'reservation_cancelled' %>
+                <span class="badge bg-danger">Reserva Cancelada</span>
+              <% when 'court_created' %>
+                <span class="badge bg-info">Quadra Criada</span>
+              <% when 'court_updated' %>
+                <span class="badge bg-warning">Quadra Atualizada</span>
+              <% when 'court_deleted' %>
+                <span class="badge bg-danger">Quadra Excluída</span>
+              <% when 'payment_created' %>
+                <span class="badge bg-primary">Pagamento Criado</span>
+              <% when 'payment_completed' %>
+                <span class="badge bg-success">Pagamento Concluído</span>
+              <% when 'payment_failed' %>
+                <span class="badge bg-danger">Pagamento Falhou</span>
+              <% when 'payment_refunded' %>
+                <span class="badge bg-info">Pagamento Reembolsado</span>
+              <% else %>
+                <span class="badge bg-secondary"><%= @notification_log.notification_type %></span>
+              <% end %>
+            </dd>
+            
+            <dt class="col-sm-4">Status:</dt>
+            <dd class="col-sm-8">
+              <% if @notification_log.status == 'sent' %>
+                <span class="badge bg-success">Enviado</span>
+              <% else %>
+                <span class="badge bg-danger">Falha</span>
+              <% end %>
+            </dd>
+            
+            <dt class="col-sm-4">Data/Hora:</dt>
+            <dd class="col-sm-8"><%= l(@notification_log.sent_at, format: :long) %></dd>
+          </dl>
+        </div>
+        
+        <div class="col-md-6">
+          <h5>Detalhes</h5>
+          <dl class="row">
+            <dt class="col-sm-4">Usuário:</dt>
+            <dd class="col-sm-8"><%= @notification_log.user.email %></dd>
+            
+            <% if @notification_log.reservation.present? %>
+              <dt class="col-sm-4">Quadra:</dt>
+              <dd class="col-sm-8"><%= @notification_log.reservation.court.name %></dd>
+              
+              <dt class="col-sm-4">Data da Reserva:</dt>
+              <dd class="col-sm-8"><%= l(@notification_log.reservation.date, format: :long) %></dd>
+            <% end %>
+            
+            <% if @notification_log.error_message.present? %>
+              <% details = JSON.parse(@notification_log.error_message) %>
+              
+              <% if @notification_log.notification_type.start_with?('payment_') %>
+                <dt class="col-sm-4">ID do Pagamento:</dt>
+                <dd class="col-sm-8"><%= details['payment_id'] %></dd>
+                
+                <dt class="col-sm-4">Valor:</dt>
+                <dd class="col-sm-8"><%= number_to_currency(details['payment_amount']) %></dd>
+                
+                <dt class="col-sm-4">Status:</dt>
+                <dd class="col-sm-8"><%= details['payment_status'] %></dd>
+                
+                <% if details['payment_intent_id'].present? %>
+                  <dt class="col-sm-4">ID da Intenção:</dt>
+                  <dd class="col-sm-8"><%= details['payment_intent_id'] %></dd>
+                <% end %>
+                
+                <% if details['refund_id'].present? %>
+                  <dt class="col-sm-4">ID do Reembolso:</dt>
+                  <dd class="col-sm-8"><%= details['refund_id'] %></dd>
+                <% end %>
+              <% elsif @notification_log.notification_type.start_with?('court_') %>
+                <dt class="col-sm-4">Quadra:</dt>
+                <dd class="col-sm-8"><%= details['court_name'] %></dd>
+                
+                <dt class="col-sm-4">Ação:</dt>
+                <dd class="col-sm-8"><%= details['action'] %></dd>
+              <% elsif @notification_log.reservation.nil? && details['date'].present? %>
+                <dt class="col-sm-4">Quadra:</dt>
+                <dd class="col-sm-8"><%= details['court_name'] %></dd>
+                
+                <dt class="col-sm-4">Data:</dt>
+                <dd class="col-sm-8"><%= l(Date.parse(details['date']), format: :long) %></dd>
+              <% end %>
+            <% end %>
+          </dl>
+        </div>
+      </div>
+
+      <% if @notification_log.error_message.present? %>
+        <div class="alert alert-info">
+          <h5>Detalhes Adicionais:</h5>
+          <pre class="mb-0"><%= @notification_log.error_message %></pre>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="card-footer">
+      <%= link_to admin_notification_logs_path, class: "btn btn-secondary" do %>
+        <i class="bi bi-arrow-left"></i> Voltar para Lista
+      <% end %>
+    </div>
+  </div>
+</div> 

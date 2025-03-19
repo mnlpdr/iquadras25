@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_20_091412) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_19_200043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_091412) do
     t.index ["email"], name: "index_court_owners_on_email", unique: true
   end
 
+  create_table "court_sports", force: :cascade do |t|
+    t.bigint "court_id", null: false
+    t.bigint "sport_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["court_id", "sport_id"], name: "index_court_sports_on_court_id_and_sport_id", unique: true
+    t.index ["court_id"], name: "index_court_sports_on_court_id"
+    t.index ["sport_id"], name: "index_court_sports_on_sport_id"
+  end
+
   create_table "courts", force: :cascade do |t|
     t.string "name"
     t.string "location"
@@ -44,7 +54,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_091412) do
     t.datetime "updated_at", null: false
     t.bigint "owner_id"
     t.decimal "price_per_hour", precision: 10, scale: 2
+    t.float "latitude"
+    t.float "longitude"
     t.index ["owner_id"], name: "index_courts_on_owner_id"
+  end
+
+  create_table "notification_logs", force: :cascade do |t|
+    t.string "notification_type"
+    t.bigint "user_id"
+    t.bigint "reservation_id"
+    t.string "status"
+    t.text "error_message"
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_type"], name: "index_notification_logs_on_notification_type"
+    t.index ["reservation_id"], name: "index_notification_logs_on_reservation_id"
+    t.index ["status"], name: "index_notification_logs_on_status"
+    t.index ["user_id"], name: "index_notification_logs_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "reservation_id", null: false
+    t.bigint "user_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.integer "status", default: 0
+    t.string "stripe_payment_id"
+    t.string "stripe_payment_intent_id"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_id"], name: "index_payments_on_reservation_id"
+    t.index ["stripe_payment_id"], name: "index_payments_on_stripe_payment_id", unique: true
+    t.index ["stripe_payment_intent_id"], name: "index_payments_on_stripe_payment_intent_id", unique: true
+    t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -55,8 +98,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_091412) do
     t.datetime "updated_at", null: false
     t.datetime "start_time"
     t.datetime "end_time"
+    t.integer "status", default: 0
     t.index ["court_id"], name: "index_reservations_on_court_id"
+    t.index ["status"], name: "index_reservations_on_status"
     t.index ["user_id"], name: "index_reservations_on_user_id"
+  end
+
+  create_table "sports", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_sports_on_name", unique: true
   end
 
   create_table "test_enums", force: :cascade do |t|
@@ -80,7 +132,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_091412) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "court_sports", "courts"
+  add_foreign_key "court_sports", "sports"
   add_foreign_key "courts", "users", column: "owner_id"
+  add_foreign_key "notification_logs", "reservations", on_delete: :nullify
+  add_foreign_key "notification_logs", "users"
+  add_foreign_key "payments", "reservations"
+  add_foreign_key "payments", "users"
   add_foreign_key "reservations", "courts"
   add_foreign_key "reservations", "users"
 end

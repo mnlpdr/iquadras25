@@ -1,6 +1,6 @@
 class ReservationsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_reservation, only: [:destroy]
+  before_action :set_reservation, only: [:show, :destroy, :cancel]
   load_and_authorize_resource except: [:create, :available_slots]
 
   def index
@@ -19,6 +19,10 @@ class ReservationsController < ApplicationController
                    end
   end
 
+  def show
+    # A reserva já é carregada pelo before_action :set_reservation
+  end
+
   def new
     @reservation = Reservation.new
     @reservation.court_id = params[:court_id] if params[:court_id]
@@ -26,8 +30,10 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    @reservation = current_user.reservations.build(reservation_params)
+    @reservation = current_user.reservations.new(reservation_params)
+    @reservation.status = :pending_payment
     
+    # Processar o time_slot do formulário para definir start_time e end_time
     if params[:reservation][:time_slot].present?
       start_time, end_time = params[:reservation][:time_slot].split('-')
       date = Date.parse(params[:reservation][:date])
@@ -36,7 +42,7 @@ class ReservationsController < ApplicationController
     end
 
     if @reservation.save
-      redirect_to reservations_path, notice: "Reserva criada com sucesso!"
+      redirect_to new_reservation_payment_path(@reservation), notice: 'Reserva criada com sucesso. Por favor, realize o pagamento.'
     else
       flash.now[:alert] = @reservation.errors.full_messages.join(", ")
       render :new, status: :unprocessable_entity
@@ -44,7 +50,17 @@ class ReservationsController < ApplicationController
   end
 
   def destroy
+    reservation_data = {
+      "id" => @reservation.id,
+      "user_id" => @reservation.user_id,
+      "court_name" => @reservation.court.name,
+      "date" => @reservation.date.to_s,
+      "start_time" => @reservation.start_time.to_s,
+      "end_time" => @reservation.end_time.to_s
+    }
+
     if @reservation.destroy
+      NotificationWorker.perform_async('reservation_cancelled', @reservation.id, reservation_data)
       redirect_to reservations_path, notice: "Reserva cancelada com sucesso!"
     else
       redirect_to reservations_path, alert: "Erro ao cancelar a reserva."
@@ -66,6 +82,21 @@ class ReservationsController < ApplicationController
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
+  def cancel
+    if @reservation.confirmed? && @reservation.payment&.completed?
+      result = StripeService.refund_payment(@reservation.payment)
+      
+      if result[:success]
+        @reservation.update(status: :cancelled)
+        redirect_to @reservation, notice: "Reserva cancelada e pagamento reembolsado com sucesso."
+      else
+        redirect_to @reservation, alert: "Erro ao processar o reembolso."
+      end
+    else
+      redirect_to @reservation, alert: "Esta reserva não pode ser cancelada."
+    end
+  end
+
   private
 
   def set_reservation
@@ -73,6 +104,7 @@ class ReservationsController < ApplicationController
   end
 
   def reservation_params
-    params.require(:reservation).permit(:court_id, :date)
+    # Remova time_slot e date dos parâmetros permitidos, pois eles são processados separadamente
+    params.require(:reservation).permit(:court_id)
   end
 end
