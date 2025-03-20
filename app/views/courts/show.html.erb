@@ -1,17 +1,28 @@
 <div class="container mt-4">
   <h1 class="mb-4">Quadra</h1>
 
-  <p><strong>Nome:</strong> <%= @court.name %></p>
-  <p><strong>Localização:</strong> <%= @court.location %></p>
-  <p><strong>Capacidade:</strong> <%= @court.capacity %></p>
-  <p><strong>Dono:</strong> <%= @court.owner&.name || "Não especificado" %></p>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <% if @court.has_photo? %>
+        <%= image_tag @court.photo, class: "img-fluid rounded", alt: @court.name %>
+      <% else %>
+        <%= image_tag "default_court.jpg", class: "img-fluid rounded", alt: "Imagem padrão" %>
+      <% end %>
+    </div>
+    <div class="col-md-6">
+      <p><strong>Nome:</strong> <%= @court.name %></p>
+      <p><strong>Localização:</strong> <%= @court.location %></p>
+      <p><strong>Capacidade:</strong> <%= @court.capacity %></p>
+      <p><strong>Dono:</strong> <%= @court.owner&.name || "Não especificado" %></p>
 
-  <% if @court.sports.any? %>
-    <p>
-      <strong>Esportes disponíveis:</strong>
-      <%= @court.sports.pluck(:name).join(", ") %>
-    </p>
-  <% end %>
+      <% if @court.sports.any? %>
+        <p>
+          <strong>Esportes disponíveis:</strong>
+          <%= @court.sports.pluck(:name).join(", ") %>
+        </p>
+      <% end %>
+    </div>
+  </div>
 
   <hr>
 

@@ -1,58 +1,85 @@
 <div class="container">
-  <h1 class="text-center my-4">
-    <% case current_user.role %>
-    <% when 'admin' %>
-      Todas as Reservas
-    <% when 'court_owner' %>
-      Reservas das Minhas Quadras
-    <% else %>
-      Minhas Reservas
+  <div class="d-flex justify-content-between align-items-center">
+    <h1 class="text-center my-4">
+      <% case current_user.role %>
+      <% when 'admin' %>
+        Todas as Reservas
+      <% when 'court_owner' %>
+        Reservas das Minhas Quadras
+      <% else %>
+        Minhas Reservas
+      <% end %>
+    </h1>
+
+    <% unless current_user.court_owner? %>
+      <a href="<%= new_reservation_path %>" class="btn btn-primary mb-3">
+        <i class="bi bi-plus-circle"></i> Nova Reserva
+      </a>
     <% end %>
-  </h1>
 
-  <% unless current_user.court_owner? %>
-    <a href="<%= new_reservation_path %>" class="btn btn-primary mb-3">
-      <i class="bi bi-plus-circle"></i> Nova Reserva
-    </a>
-  <% end %>
+    <div class="btn-group">
+      <%= link_to "Todas", reservations_path(status: "all"), class: "btn btn-outline-primary #{params[:status] == 'all' || params[:status].nil? ? 'active' : ''}" %>
+      <%= link_to "Ativas", reservations_path(status: "active"), class: "btn btn-outline-primary #{params[:status] == 'active' ? 'active' : ''}" %>
+      <%= link_to "Canceladas", reservations_path(status: "cancelled"), class: "btn btn-outline-primary #{params[:status] == 'cancelled' ? 'active' : ''}" %>
+    </div>
+  </div>
 
-  <ul class="list-group">
-    <% @reservations.each do |reservation| %>
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold"><%= reservation.court.name %></div>
-            <div>
-              Data: <%= l(reservation.date, format: :long) %><br>
-              Horário: <%= l(reservation.start_time, format: :time) %> - <%= l(reservation.end_time, format: :time) %>
-              <% if current_user.admin? || current_user.court_owner? %>
-                <br>
-                <span class="text-muted">Reservado por: <%= reservation.user.name %></span>
-              <% end %>
+  <% if @reservations.any? %>
+    <div class="row mt-4">
+      <% @reservations.each do |reservation| %>
+        <div class="col-md-6 mb-4">
+          <div class="card <%= reservation.cancelled? ? 'border-danger' : '' %>">
+            <div class="card-header <%= reservation.cancelled? ? 'bg-danger text-white' : '' %>">
+              <h5 class="mb-0">
+                Reserva #<%= reservation.id %>
+                <% if reservation.cancelled? %>
+                  <span class="badge bg-danger float-end">Cancelada</span>
+                <% end %>
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold"><%= reservation.court.name %></div>
+                  <div>
+                    Data: <%= l(reservation.date, format: :long) %><br>
+                    Horário: <%= l(reservation.start_time, format: :time) %> - <%= l(reservation.end_time, format: :time) %>
+                    <% if current_user.admin? || current_user.court_owner? %>
+                      <br>
+                      <span class="text-muted">Reservado por: <%= reservation.user.name %></span>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <% if can? :destroy, reservation %>
+                  <%= button_to "Cancelar Reserva", 
+                      reservation_path(reservation), 
+                      method: :delete, 
+                      class: "btn btn-danger btn-sm", 
+                      data: { confirm: "Tem certeza que deseja cancelar esta reserva?" } %>
+                <% end %>
+              </div>
+              
+              <div class="mt-3">
+                <%= link_to "Ver Detalhes", reservation_path(reservation), class: "btn btn-primary" %>
+                <% unless reservation.cancelled? %>
+                  <!-- Botões de ação para reservas não canceladas -->
+                <% end %>
+              </div>
             </div>
           </div>
-          
-          <% if can? :destroy, reservation %>
-            <%= button_to "Cancelar Reserva", 
-                reservation_path(reservation), 
-                method: :delete, 
-                class: "btn btn-danger btn-sm", 
-                data: { confirm: "Tem certeza que deseja cancelar esta reserva?" } %>
-          <% end %>
         </div>
-      </li>
-    <% end %>
-  </ul>
-
-  <% if @reservations.empty? %>
-    <div class="alert alert-info mt-3">
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info mt-4">
       <% case current_user.role %>
       <% when 'admin' %>
         Não há reservas cadastradas.
       <% when 'court_owner' %>
         Não há reservas para suas quadras.
       <% else %>
-        Você ainda não tem nenhuma reserva.
+        Você não possui reservas ativas no momento.
       <% end %>
     </div>
   <% end %>

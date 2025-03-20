@@ -1,0 +1,6 @@
+[submodule "bulletin_board"]
+	path = bulletin_board
+	url = ./bulletin_board
+[submodule "payment_service"]
+	path = payment_service
+	url = ./payment_service

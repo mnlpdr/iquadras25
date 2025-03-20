@@ -100,3 +100,9 @@ gem 'redis', '~> 4.8'
 gem 'redis-namespace'
 
 gem 'stripe'
+gem "bulletin_board", path: "bulletin_board"
+
+# Bulletin Board Engine
+gem 'bulletin_board', path: 'bulletin_board'
+
+gem 'active_storage_validations'

@@ -1,7 +1,7 @@
 class Reservation < ApplicationRecord
   belongs_to :user
   belongs_to :court
-  has_one :payment, dependent: :restrict_with_exception
+  has_one :payment, dependent: :nullify
 
   validates :start_time, presence: true
   validates :end_time, presence: true
@@ -28,6 +28,35 @@ class Reservation < ApplicationRecord
     
     # Multiplica pelo preço por hora da quadra
     (duration_in_hours * court.price_per_hour).round(2)
+  end
+
+  # Adicione um método para cancelamento seguro
+  def safe_cancel
+    transaction do
+      # Se houver pagamento, marque-o como cancelado/reembolsado
+      if payment.present?
+        if payment.completed?
+          # Use o RefundService para processar o reembolso
+          refund_result = RefundService.process_refund(payment)
+          unless refund_result[:success]
+            errors.add(:base, "Erro ao processar reembolso: #{refund_result[:error]}")
+            return false
+          end
+        else
+          payment.update(status: :cancelled)
+        end
+      end
+      
+      # Atualize o status da reserva usando o valor correto do enum
+      update!(status: :cancelled)
+      
+      # Retorne true para indicar sucesso
+      true
+    end
+  rescue => e
+    Rails.logger.error("Erro ao cancelar reserva: #{e.message}")
+    errors.add(:base, "Não foi possível cancelar a reserva: #{e.message}")
+    false
   end
 
   private

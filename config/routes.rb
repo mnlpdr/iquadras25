@@ -43,4 +43,7 @@ Rails.application.routes.draw do
 
   # Rota para webhooks do Stripe
   post 'stripe/webhook', to: 'payments#webhook'
+
+  # Montar o Bulletin Board
+  mount BulletinBoard::Engine, at: '/bulletin_board'
 end

@@ -4,19 +4,23 @@ class ReservationsController < ApplicationController
   load_and_authorize_resource except: [:create, :available_slots]
 
   def index
-    @reservations = case current_user.role
-                   when 'admin'
-                     Reservation.includes(:user, :court)
-                              .order(date: :asc, start_time: :asc)
-                   when 'court_owner'
-                     Reservation.includes(:user, :court)
-                              .joins(:court)
-                              .where(courts: { owner_id: current_user.id })
-                              .order(date: :asc, start_time: :asc)
-                   else # client
-                     current_user.reservations.includes(:court)
-                              .order(date: :asc, start_time: :asc)
-                   end
+    if current_user.admin?
+      @reservations = Reservation.includes(:court, :user)
+    elsif current_user.court_owner?
+      @reservations = Reservation.joins(:court).where(courts: { owner_id: current_user.id })
+    else
+      @reservations = current_user.reservations
+    end
+    
+    # Aplicar filtro de status
+    case params[:status]
+    when "active"
+      @reservations = @reservations.where.not(status: :cancelled)
+    when "cancelled"
+      @reservations = @reservations.where(status: :cancelled)
+    end
+    
+    @reservations = @reservations.includes(:court, :user).order(created_at: :desc)
   end
 
   def show
@@ -50,20 +54,32 @@ class ReservationsController < ApplicationController
   end
 
   def destroy
+    # Armazene os dados da reserva antes de cancelá-la para notificações
     reservation_data = {
-      "id" => @reservation.id,
-      "user_id" => @reservation.user_id,
-      "court_name" => @reservation.court.name,
-      "date" => @reservation.date.to_s,
-      "start_time" => @reservation.start_time.to_s,
-      "end_time" => @reservation.end_time.to_s
+      id: @reservation.id,
+      court_name: @reservation.court.name,
+      date: @reservation.date.to_s,
+      start_time: @reservation.start_time.strftime('%H:%M'),
+      end_time: @reservation.end_time.strftime('%H:%M'),
+      user_name: @reservation.user.name,
+      user_email: @reservation.user.email
     }
 
-    if @reservation.destroy
-      NotificationWorker.perform_async('reservation_cancelled', @reservation.id, reservation_data)
-      redirect_to reservations_path, notice: "Reserva cancelada com sucesso!"
-    else
-      redirect_to reservations_path, alert: "Erro ao cancelar a reserva."
+    begin
+      # Tente cancelar a reserva
+      result = @reservation.safe_cancel
+      
+      if result
+        NotificationService.notify_reservation_cancelled(@reservation)
+        redirect_to reservations_path, notice: "Reserva cancelada com sucesso!"
+      else
+        flash[:alert] = "Não foi possível cancelar a reserva: #{@reservation.errors.full_messages.join(', ')}"
+        redirect_to reservation_path(@reservation)
+      end
+    rescue => e
+      Rails.logger.error("Erro ao cancelar reserva: #{e.message}")
+      flash[:alert] = "Erro ao processar o cancelamento: #{e.message}"
+      redirect_to reservation_path(@reservation)
     end
   end
 

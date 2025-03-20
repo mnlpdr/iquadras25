@@ -1,0 +1,13 @@
+<div class="court-rating">
+  <div class="stars">
+    <% rating.to_i.times do %>
+      <i class="bi bi-star-fill text-warning"></i>
+    <% end %>
+    <% (5 - rating.to_i).times do %>
+      <i class="bi bi-star text-warning"></i>
+    <% end %>
+  </div>
+  <div class="rating-text">
+    <%= rating.round(1) %> de 5 (<%= count %> <%= count == 1 ? 'avaliação' : 'avaliações' %>)
+  </div>
+</div>

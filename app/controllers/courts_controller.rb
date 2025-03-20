@@ -29,22 +29,16 @@ class CourtsController < ApplicationController
   end
 
   def create
-    @court = Court.new(court_params)
+    @court = current_user.courts.build(court_params)
     
-    # Se for admin, precisamos definir o dono da quadra
-    if current_user.admin?
-      owner = User.court_owner.find_by(id: params[:court][:owner_id])
-      @court.owner = owner if owner
-    else
-      @court.owner = current_user
-    end
-
-    if @court.save
-      NotificationService.notify_court_created(@court)
-      redirect_to courts_path, notice: "Quadra criada com sucesso!"
-    else
-      flash.now[:alert] = @court.errors.full_messages.join(", ")
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @court.save
+        format.html { redirect_to @court, notice: 'Quadra criada com sucesso.' }
+        format.json { render :show, status: :created, location: @court }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @court.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -52,12 +46,14 @@ class CourtsController < ApplicationController
   end
 
   def update
-    if @court.update(court_params)
-      NotificationService.notify_court_updated(@court)
-      redirect_to courts_path, notice: "Quadra atualizada com sucesso!"
-    else
-      flash.now[:alert] = @court.errors.full_messages.join(", ")
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @court.update(court_params)
+        format.html { redirect_to @court, notice: 'Quadra atualizada com sucesso.' }
+        format.json { render :show, status: :ok, location: @court }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @court.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -81,11 +77,7 @@ class CourtsController < ApplicationController
   end
 
   def court_params
-    permitted_params = if current_user.admin?
-      params.require(:court).permit(:name, :location, :capacity, :price_per_hour, :owner_id, sport_ids: [])
-    else
-      params.require(:court).permit(:name, :location, :capacity, :price_per_hour, sport_ids: [])
-    end
+    params.require(:court).permit(:name, :location, :capacity, :price_per_hour, :owner_id, :photo, sport_ids: [])
   end
 
   def authorize_admin_or_owner

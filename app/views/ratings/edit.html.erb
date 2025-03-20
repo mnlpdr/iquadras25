@@ -1,0 +1,26 @@
+<div class="container mt-4">
+  <h1>Editar Avaliação: <%= @court.name %></h1>
+  
+  <%= form_with(url: rating_path(@rating[:id]), method: :patch, local: true) do |form| %>
+    <div class="mb-3">
+      <%= form.label :score, "Pontuação", class: "form-label" %>
+      <div class="rating-stars">
+        <%= rating_stars_input_for("rating[score]", @rating[:score]) %>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <%= form.label :comment, "Comentário", class: "form-label" %>
+      <%= form.text_area :comment, value: @rating[:comment], class: "form-control", rows: 3 %>
+    </div>
+    
+    <div class="mb-3">
+      <%= form.submit "Atualizar Avaliação", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", court_path(@rating[:court_id]), class: "btn btn-secondary" %>
+      <%= link_to "Excluir Avaliação", rating_path(@rating[:id]), 
+                  method: :delete, 
+                  data: { confirm: "Tem certeza que deseja excluir esta avaliação?" }, 
+                  class: "btn btn-danger ms-2" %>
+    </div>
+  <% end %>
+</div>

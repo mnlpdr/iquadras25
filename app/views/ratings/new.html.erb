@@ -1,0 +1,24 @@
+<div class="container mt-4">
+  <h1>Avaliar Quadra: <%= @court.name %></h1>
+  
+  <%= form_with(model: Rating.new, url: ratings_path, local: true) do |form| %>
+    <%= form.hidden_field :court_id, value: @court.id %>
+    
+    <div class="mb-3">
+      <%= form.label :score, "Pontuação", class: "form-label" %>
+      <div class="rating-stars">
+        <%= rating_stars_input_for("rating[score]") %>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <%= form.label :comment, "Comentário", class: "form-label" %>
+      <%= form.text_area :comment, class: "form-control", rows: 3 %>
+    </div>
+    
+    <div class="mb-3">
+      <%= form.submit "Enviar Avaliação", class: "btn btn-primary" %>
+      <%= link_to "Cancelar", court_path(@court), class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

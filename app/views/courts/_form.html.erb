@@ -62,6 +62,21 @@
     </div>
   <% end %>
 
+  <div data-controller="image-preview" class="mb-3">
+    <%= f.label :photo, "Foto da Quadra", class: "form-label" %>
+    <%= f.file_field :photo, class: "form-control", accept: "image/*", data: { image_preview_target: "input" } %>
+    
+    <div class="mt-2">
+      <% if @court.photo.attached? %>
+        <%= image_tag @court.photo, class: "img-thumbnail", style: "max-width: 200px", data: { image_preview_target: "preview" } %>
+      <% else %>
+        <%= image_tag "", class: "img-thumbnail", style: "max-width: 200px; display: none", data: { image_preview_target: "preview" } %>
+      <% end %>
+    </div>
+    
+    <div class="form-text">Formatos aceitos: JPG, PNG. Tamanho máximo: 5MB.</div>
+  </div>
+
   <%= f.submit "Salvar Quadra", class: "btn btn-primary" %>
   <%= link_to "Voltar", courts_path, class: "btn btn-secondary" %>
 <% end %>

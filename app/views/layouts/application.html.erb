@@ -77,6 +77,10 @@
           <li class="nav-item">
             <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-danger text-white nav-link", form: { class: "d-inline-block" } %>
           </li>
+
+          <li class="nav-item">
+            <%= link_to "Quadro de Mensagens", bulletin_board.root_path, class: "nav-link" %>
+          </li>
         <% else %>
           <li class="nav-item"><a class="nav-link btn btn-primary text-white" href="<%= new_user_session_path %>">Entrar</a></li>
         <% end %>

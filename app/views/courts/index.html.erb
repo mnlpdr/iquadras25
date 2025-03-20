@@ -40,29 +40,30 @@
     <% end %>
   <% end %>
 
-  <div class="row row-cols-1 row-cols-md-3 g-4">
+  <div class="row" data-court-search-target="courtsList">
     <% @courts.each do |court| %>
-      <div class="col" 
-           data-court-search-target="card"
-           data-name="<%= court.name %>"
-           data-location="<%= court.location %>"
-           data-sport-ids="<%= court.sport_ids.join(',') %>">
+      <div class="col-md-4 mb-4" data-court-name="<%= court.name.downcase %>" data-court-location="<%= court.location.downcase %>" data-court-sports="<%= court.sports.pluck(:id).join(',') %>">
         <div class="card h-100 shadow-sm">
+          <!-- Exibir foto da quadra ou imagem padrão -->
+          <% if court.has_photo? %>
+            <%= image_tag court.photo, class: "card-img-top", style: "height: 200px; object-fit: cover;", alt: court.name %>
+          <% else %>
+            <%= image_tag "default_court.jpg", class: "card-img-top", style: "height: 200px; object-fit: cover;", alt: "Imagem padrão" %>
+          <% end %>
+          
           <div class="card-body">
             <h5 class="card-title"><%= court.name %></h5>
-            <p class="card-text">Localização: <%= court.location %></p>
-            <p class="card-text">Capacidade: <%= court.capacity %> pessoas</p>
-            <p class="card-text">Preço/hora: R$ <%= number_with_precision(court.price_per_hour, precision: 2) %></p>
-            <p class="card-text">Dono: <%= court.owner&.name || "Não especificado" %></p>
+            <p class="card-text"><i class="bi bi-geo-alt"></i> <%= court.location %></p>
+            <p class="card-text"><i class="bi bi-people"></i> Capacidade: <%= court.capacity %> pessoas</p>
+            <p class="card-text"><i class="bi bi-cash"></i> R$ <%= number_to_currency(court.price_per_hour) %>/hora</p>
             
             <% if court.sports.any? %>
               <p class="card-text">
-                <small class="text-muted">
-                  Esportes: <%= court.sports.pluck(:name).join(", ") %>
-                </small>
+                <i class="bi bi-trophy"></i> 
+                <%= court.sports.pluck(:name).join(", ") %>
               </p>
             <% end %>
-
+            
             <div class="d-flex justify-content-between align-items-center mt-3">
               <%= link_to court_path(court), class: "btn btn-info" do %>
                 <i class="bi bi-eye"></i> Ver Detalhes

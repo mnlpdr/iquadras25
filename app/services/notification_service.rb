@@ -76,9 +76,11 @@ class NotificationService
         payment_id: payment.id,
         payment_amount: payment.amount,
         payment_status: payment.status,
-        payment_intent_id: payment.stripe_payment_intent_id,
-        refund_id: payment.metadata&.dig('refund_id')
+        refund_date: Time.current
       })
+      
+      # Se você tiver um sistema de e-mail configurado, pode descomentar esta linha
+      # UserMailer.refund_confirmation(payment).deliver_later
     end
 
     private

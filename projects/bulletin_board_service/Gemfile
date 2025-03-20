@@ -1,0 +1,4 @@
+# ... outras gems ...
+
+# Adicione sua engine com o caminho absoluto ou relativo correto
+gem 'bulletin_board', path: '../../iquadras25/bulletin_board' 

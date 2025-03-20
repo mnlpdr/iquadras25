@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">Quadro de Mensagens</h5>
+  </div>
+  <div class="card-body">
+    <% posts = BulletinBoardService.get_posts(limit: 3) %>
+    
+    <% if posts.any? %>
+      <ul class="list-group">
+        <% posts.each do |post| %>
+          <li class="list-group-item">
+            <strong><%= post['sport'] %></strong> - <%= post['username'] %><br>
+            <small><%= post['message'].truncate(100) %></small><br>
+            <small class="text-muted">Data: <%= post['date'] %></small>
+          </li>
+        <% end %>
+      </ul>
+      
+      <div class="mt-3">
+        <a href="<%= bulletin_board_path %>" class="btn btn-primary btn-sm">Ver todos</a>
+      </div>
+    <% else %>
+      <p class="text-muted">Nenhuma mensagem disponível.</p>
+      <a href="<%= bulletin_board.new_post_path %>" class="btn btn-success btn-sm">Publicar mensagem</a>
+    <% end %>
+  </div>
+</div> 
